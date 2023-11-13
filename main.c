@@ -12,14 +12,29 @@
 int main(int argc, char *argv[])
 {
  char *title = NULL;
+ char *paragraphs[100];
+ int paragraph_count = 0;
 
  int opt;
- while ((opt = getopt(argc, argv, "t:")) != -1)
+
+ while ((opt = getopt(argc, argv, "t:p:")) != -1)
  {
   switch (opt)
   {
    case 't':
     title = optarg;
+    break;
+   case 'p':
+    if (paragraph_count < 100)
+     {
+      paragraphs[paragraph_count] = optarg;
+      paragraph_count++;
+     }
+    else
+     {
+      fprintf(stderr, "Too many paragraphs. Limit reached.\n");
+      exit(EXIT_FAILURE);
+     }
     break;
    default:
     fprintf(stderr, "Usage: %s -t title\n", argv[0]);
@@ -30,6 +45,12 @@ int main(int argc, char *argv[])
  if (title == NULL)
  {
   fprintf(stderr, "You must provide a title using the -t option.\n");
+  exit(EXIT_FAILURE);
+ }
+
+ if (paragraph_count == 0)
+ {
+  fprintf(stderr, "You must provide at least one -p option for a paragraph.\n");
   exit(EXIT_FAILURE);
  }
 
@@ -48,14 +69,17 @@ int main(int argc, char *argv[])
   exit(EXIT_FAILURE);
  }
 
- printf("Formatted Date: %s\n", formattedString);
- printf("Title: %s\n", title);
- printf("File name: %s\n", filename);
+ fprintf(file, "Title: %s\n", title);
+ fprintf(file, "Paragraphs:\n");
 
- // You can write content to the file if needed
- // fprintf(file, "Content goes here\n");
+ for (int i = 0; i < paragraph_count; i++)
+ {
+  fprintf(file, "%s\n", paragraphs[i]);
+ }
 
  fclose(file);
+
+ printf("File \"%s\" has been created with the provided title and paragraphs.\n", filename);
 
  return 0;
 }
