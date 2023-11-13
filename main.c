@@ -9,6 +9,15 @@
  * Bare with the comments, bc they explain (to me) what's going on
  */
 
+void appendTimestamp(FILE *file)
+{
+ time_t now = time(NULL);
+ struct tm timeinfo = *localtime(&now);
+ char timeString[9]; // HH:MM:SS format
+ sprintf(timeString, "%02d:%02d:%02d", timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec);
+ fprintf(file, "[%s]\n", timeString);
+}
+
 int main(int argc, char *argv[])
 {
  char *title = NULL;
@@ -79,6 +88,8 @@ int main(int argc, char *argv[])
   // If the file is not empty, add a newline before appending paragraphs
   fprintf(file, "\n");
  }
+
+ appendTimestamp(file);
 
  for (int i = 0; i < paragraph_count; i++)
  {
