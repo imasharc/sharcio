@@ -62,15 +62,23 @@ int main(int argc, char *argv[])
  char filename[256]; // Adjust the buffer size as needed
  snprintf(filename, sizeof(filename), "%s_%s.txt", formattedString, title);
 
- FILE *file = fopen(filename, "w");
+ FILE *file = fopen(filename, "a"); // use "a" mode to append to the file
  if (file == NULL)
  {
   perror("Error opening file");
   exit(EXIT_FAILURE);
  }
-
- fprintf(file, "Title: %s\n", title);
- //fprintf(file, "Paragraphs:\n");
+ 
+ if (ftell(file) == 0)
+ {
+  // If the file is empty, write the title
+  fprintf(file, "Title: %s\n", title);
+ }
+ else
+ {
+  // If the file is not empty, add a newline before appending paragraphs
+  fprintf(file, "\n");
+ }
 
  for (int i = 0; i < paragraph_count; i++)
  {
