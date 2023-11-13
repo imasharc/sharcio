@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
  }
 
  fprintf(file, "Title: %s\n", title);
- fprintf(file, "Paragraphs:\n");
+ //fprintf(file, "Paragraphs:\n");
 
  for (int i = 0; i < paragraph_count; i++)
  {
